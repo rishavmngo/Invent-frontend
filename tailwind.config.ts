@@ -17,6 +17,7 @@ export default {
         invent_crimson: "#FFBDBE",
         invent_yellow: "#FFFABD",
         invent_text_nh: "#8A8A8A",
+        invent_bright_green: "#5FDB7A",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
