@@ -1,8 +1,6 @@
-"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Provider } from "react-redux";
-import { store } from "@/state/store";
+import AppWrapper from "@/components/AppWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,12 +22,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("from root layout");
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider store={store}>{children}</Provider>
+        <AppWrapper>{children}</AppWrapper>
       </body>
     </html>
   );

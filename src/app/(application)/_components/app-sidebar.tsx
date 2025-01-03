@@ -2,9 +2,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -23,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, User2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 const items = [
   {
     title: "Dashboard",
@@ -67,11 +65,11 @@ export function AppSidebar() {
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link href={item.url}>
                   <item.icon />
 
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

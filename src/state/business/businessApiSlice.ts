@@ -1,27 +1,30 @@
-import { AuthResult, BusinessLoginCredentials } from "@/types/auth.types";
+import { AuthResult } from "@/types/auth.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootType } from "../store";
 
+const baseQuery = fetchBaseQuery({
+  baseUrl: "http://localhost:5000/api/business",
+  prepareHeaders: (headers, { getState, endpoint }) => {
+    const state = getState() as RootType;
+    const token = state.auth.token;
+    headers.set("secret_token", `${token}`);
+
+    return headers;
+  },
+});
 export const businessApiSlice = createApi({
   reducerPath: "businessapi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/business",
-  }),
+  baseQuery,
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl: "http://localhost:5000/api/business",
+  // }),
   endpoints: (builder) => {
     return {
-      login: builder.mutation<AuthResult, BusinessLoginCredentials>({
-        query: (user) => ({
-          url: "/login",
-          method: "POST",
-          body: user,
-        }),
-      }),
-      signup: builder.mutation<AuthResult, BusinessLoginCredentials>({
-        query: (user) => ({
-          url: "/signup",
-          method: "POST",
-          body: user,
-        }),
+      getLoginedBusiness: builder.query<AuthResult, void>({
+        query: () => "/",
       }),
     };
   },
 });
+
+export const { useGetLoginedBusinessQuery } = businessApiSlice;

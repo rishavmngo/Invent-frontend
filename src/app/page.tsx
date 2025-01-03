@@ -1,12 +1,15 @@
 "use client";
-import { getToken } from "@/lib/utils";
-import { redirect } from "next/navigation";
+import { RootType } from "@/state/store";
+import Link from "next/link";
+import { useSelector } from "react-redux";
 
 export default function Home() {
-  const token = getToken();
-  if (!token) {
-    redirect("/sign-up");
-  } else {
-  }
-  redirect("/dashboard");
+  const { user } = useSelector((state: RootType) => state.auth);
+
+  return (
+    <div>
+      <h1>Hi {user && user.name}</h1>
+      <Link href="/dashboard">Dashboard</Link>
+    </div>
+  );
 }
