@@ -27,10 +27,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      dispatch(setCredentials({ token: token }));
+      dispatch(setCredentials({ token: token, user }));
     }
   }, [token, dispatch]);
 
+  console.log("here 1");
   const {
     data: user,
     isSuccess,
@@ -41,8 +42,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    console.log(user);
     if (isSuccess) {
-      dispatch(setCredentials({ user: user, isAuthenticated: true }));
+      dispatch(setCredentials({ user: user, token, isAuthenticated: true }));
     }
   }, [user, isSuccess, dispatch]);
 

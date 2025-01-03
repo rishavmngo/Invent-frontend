@@ -1,3 +1,9 @@
+"use client";
+
+import { RootType } from "@/state/store";
+import { useSelector } from "react-redux";
+
 export default function DashboardPage() {
-  return <div>Dashboard Page</div>;
+  const { user } = useSelector((state: RootType) => state.auth);
+  return <div>Dashboard Page {user && user.name}</div>;
 }

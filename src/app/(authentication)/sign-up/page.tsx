@@ -4,12 +4,13 @@ import { redirect } from "next/navigation";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 export default function SignUpPage() {
-  const [SignupMutation, { isLoading, isSuccess }] = useSignupMutation();
+  const [SignupMutation, { isLoading, isSuccess, data }] = useSignupMutation();
   const { register, handleSubmit } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     SignupMutation({ email: data.email, password: data.password });
   };
   if (isSuccess) {
+    console.log(data);
     redirect("/dashboard");
   }
 
