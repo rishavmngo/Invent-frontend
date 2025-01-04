@@ -13,19 +13,19 @@ export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm();
 
-  const { data: user, isSuccess: haveUser } = useGetLoginedBusinessQuery(
-    undefined,
-    { skip: !isSuccess },
-  );
-
   useEffect(() => {
     if (isSuccess) {
       localStorage.setItem("token", data.token);
     }
   }, [data, isSuccess]);
 
+  const { data: user, isSuccess: haveUser } = useGetLoginedBusinessQuery(
+    { token: data ? data.token : null },
+    { skip: !isSuccess },
+  );
   useEffect(() => {
     if (haveUser && isSuccess && user) {
+      console.log("here");
       dispatch(
         setCredentials({
           token: data.token,

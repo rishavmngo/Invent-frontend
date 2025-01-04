@@ -7,69 +7,69 @@ import { Provider, useDispatch } from "react-redux";
 import LoadingSpinner from "./LoadingSpinner";
 import { redirect, usePathname } from "next/navigation";
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+// Constants
+const PUBLIC_ROUTES = ["/login", "/sign-up"];
+
+// Types
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+// Custom hook for auth logic
+export function AuthProvider({ children }: AuthProviderProps) {
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
   const [token, setLocalToken] = useState<string | null>(null);
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.endsWith(route));
 
   useEffect(() => {
-    const tempToken = localStorage.getItem("token");
-
-    if (!tempToken) {
-      if (!(pathname.endsWith("login") || pathname.endsWith("sign-up"))) {
-        console.log(`redirecting to login from  ${pathname}`);
-        redirect("/login");
-      }
-    } else {
-      setLocalToken(tempToken);
+    const tok = localStorage.getItem("token");
+    if (tok) {
+      setLocalToken(tok);
+    } else if (!isPublicRoute) {
+      redirect("/login");
     }
-  }, [pathname]);
+  }, [dispatch, isPublicRoute]);
 
-  useEffect(() => {
-    if (token) {
-      dispatch(setCredentials({ token: token, user }));
-    }
-  }, [token, dispatch]);
-
-  console.log("here 1");
   const {
     data: user,
-    isSuccess,
     isLoading,
     isError,
-  } = useGetLoginedBusinessQuery(undefined, {
-    skip: !token,
-  });
+  } = useGetLoginedBusinessQuery(
+    { token },
+    {
+      skip: isPublicRoute || token === null,
+    },
+  );
 
   useEffect(() => {
-    console.log(user);
-    if (isSuccess) {
-      dispatch(setCredentials({ user: user, token, isAuthenticated: true }));
+    if (user) {
+      dispatch(setCredentials({ user, token, isAuthenticated: true }));
     }
-  }, [user, isSuccess, dispatch]);
+  }, [user, dispatch, token]);
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center  h-screen">
+      <div className="flex justify-center items-center min-h-screen">
         <LoadingSpinner />
       </div>
     );
   }
-  if (isError) {
-    if (!(pathname.endsWith("login") || pathname.endsWith("sign-up"))) {
-      console.log(`redirecting to login from  ${pathname}`);
-      redirect("/login");
-    }
+
+  if (isError && !isPublicRoute) {
+    // dispatch(logout());
+    redirect("/login");
   }
 
-  return <div>{children}</div>;
+  if (!token && !isPublicRoute) {
+    return null;
+  }
+
+  return <>{children}</>;
 }
 
-export default function AppWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// App Wrapper Component
+export default function AppWrapper({ children }: AuthProviderProps) {
   return (
     <Provider store={store}>
       <AuthProvider>{children}</AuthProvider>

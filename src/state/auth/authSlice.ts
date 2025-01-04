@@ -1,30 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Business } from "@/types/auth.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 interface AuthState {
   token: string | null;
+  user: Business | null;
+  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
   token: null,
+  user: null,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    user: null,
-    token: null,
-    isAuthenticated: false,
-  },
+  initialState,
   reducers: {
-    setCredentials: (state, { payload: { user, token } }) => {
-      state.user = user;
-      state.token = token;
-      state.isAuthenticated = true;
+    setCredentials: (state, action: PayloadAction<Partial<AuthState>>) => {
+      return { ...state, ...action.payload };
     },
     logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.isAuthenticated = false;
       localStorage.removeItem("token");
+      return { ...initialState, token: null };
     },
   },
 });
