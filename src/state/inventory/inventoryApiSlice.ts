@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootType } from "../store";
-import { InventoryItems } from "@/types/inventory.types";
+import { FormFields, InventoryItems } from "@/types/inventory.types";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/inventory",
@@ -15,11 +15,22 @@ const baseQuery = fetchBaseQuery({
 export const inventoryApi = createApi({
   reducerPath: "inventoryApi",
   baseQuery,
+  tagTypes: ["Inventory"],
   endpoints: (builder) => ({
     getAllInventory: builder.query<InventoryItems, void>({
       query: () => "/getAll",
     }),
+
+    addInventory: builder.mutation<void, FormFields>({
+      query: (inventory) => ({
+        url: "/add",
+        method: "POST",
+        body: inventory,
+      }),
+      invalidatesTags: ["Inventory"],
+    }),
   }),
 });
 
-export const { useGetAllInventoryQuery } = inventoryApi;
+export const { useGetAllInventoryQuery, useAddInventoryMutation } =
+  inventoryApi;

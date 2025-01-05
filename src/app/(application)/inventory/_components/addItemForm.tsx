@@ -8,7 +8,7 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { FormFields } from "../_types/inventory.Scheama";
+import { FormFields } from "@/types/inventory.types";
 import InventoryPricingForm from "./InventoryPricingForm";
 import InventoryStockForm from "./InventoryStockForm";
 import AddItemFormDialogWrapper from "./AddItemFormDialogWrapper";

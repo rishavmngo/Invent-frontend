@@ -5,10 +5,10 @@ import InventoryCard from "./InventoryCard.component";
 export default function InventorySection() {
   const { data: items, isSuccess } = useGetAllInventoryQuery();
   return (
-    <div className="mx-16">
+    <div className="mx-16 ">
       <h1 className="text-2xl my-8">Inventory</h1>
 
-      <div>
+      <div className="max-h-[650px] overflow-y-auto">
         {isSuccess &&
           items.map((item) => {
             return (

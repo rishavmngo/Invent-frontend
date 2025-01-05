@@ -6,11 +6,22 @@ import { FaBox } from "react-icons/fa";
 import { useState } from "react";
 import AddItemForm from "./_components/addItemForm";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AddFormSchema, FormFields } from "./_types/inventory.Scheama";
+import { AddFormSchema, FormFields } from "@/types/inventory.types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { filterUndefinedFields } from "@/lib/utils";
+import {
+  useAddInventoryMutation,
+  useGetAllInventoryQuery,
+} from "@/state/inventory/inventoryApiSlice";
 
 export default function InventoryPage() {
   const [isDialogOpen, toggleDialog] = useState(false);
+  const [AddInventoryMutation, { error, isError }] = useAddInventoryMutation();
+  const { refetch } = useGetAllInventoryQuery();
+
+  if (isError) {
+    console.log(error);
+  }
 
   const {
     register,
@@ -23,11 +34,14 @@ export default function InventoryPage() {
     },
     resolver: zodResolver(AddFormSchema),
   });
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    console.log(data);
+    const cleanedData = filterUndefinedFields(data);
+    await AddInventoryMutation(cleanedData);
+    await refetch();
     reset();
   };
+
   return (
     <>
       <div className="">Toolbar is coming!!</div>
@@ -47,7 +61,7 @@ export default function InventoryPage() {
           isSubmitting={isSubmitting}
         />
 
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-16 right-0 transform -translate-x-1/2">
           <ButtonInvent onClick={() => toggleDialog(!isDialogOpen)}>
             <FaBox />
             Add New Item
