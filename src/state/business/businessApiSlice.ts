@@ -1,30 +1,23 @@
 import { Business } from "@/types/auth.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-interface CustomQueryExtra {
-  token: string;
-}
+import { RootType } from "../store";
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/business",
-  prepareHeaders: (headers, { extra }) => {
-    const typedExtra = extra as CustomQueryExtra;
-    headers.set("secret_token", (extra as CustomQueryExtra).token);
+  prepareHeaders: (headers, { getState }) => {
+    const state = getState() as RootType;
+    const token = state.auth.token;
+    if (token) headers.set("secret_token", token);
 
     return headers;
   },
 });
 export const businessApiSlice = createApi({
   reducerPath: "businessapi",
-  // baseQuery,
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/business",
-  }),
+  baseQuery,
   endpoints: (builder) => {
     return {
-      getLoginedBusiness: builder.query<Business, { token: string | null }>({
-        query: ({ token }) => ({
-          url: "/",
-          headers: token ? { secret_token: token } : {},
-        }),
+      getLoginedBusiness: builder.query<Business, void>({
+        query: () => "/",
       }),
     };
   },
