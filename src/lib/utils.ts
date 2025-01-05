@@ -11,3 +11,9 @@ export function setToken(token: string) {
 export function getToken() {
   return localStorage.getItem("token");
 }
+
+export function filterUndefinedFields(data: object) {
+  return Object.fromEntries(
+    Object.entries(data).filter(([key, value]) => value !== undefined),
+  );
+}
