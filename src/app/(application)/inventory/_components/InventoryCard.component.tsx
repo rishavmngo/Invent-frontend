@@ -1,13 +1,13 @@
 type InventoryCardProps = {
   itemName: string;
   purchasePrice: number;
-  salePrice: number;
+  sellPrice: number;
   inStock: number;
 };
 export default function InventoryCard({
   itemName,
   purchasePrice,
-  salePrice,
+  sellPrice,
   inStock,
 }: InventoryCardProps) {
   return (
@@ -21,8 +21,8 @@ export default function InventoryCard({
           </div>
 
           <div>
-            <p className="text-invent_text_nh">Sale Price</p>
-            <p>₹ {salePrice.toFixed(2)}</p>
+            <p className="text-invent_text_nh">Sell Price</p>
+            <p>₹ {sellPrice.toFixed(2)}</p>
           </div>
 
           <div>

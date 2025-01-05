@@ -16,7 +16,7 @@ export default function InventorySection() {
                 key={item.id}
                 itemName={item.name}
                 purchasePrice={item.purchase_price}
-                salePrice={item.sell_price}
+                sellPrice={item.sell_price}
                 inStock={item.total_quantity}
               />
             );
